@@ -110,6 +110,7 @@ def main():
 
     result = alterar_imagem(img, recovered_cookie_mask)
     show(result)
+    #test
 
 
 main()
