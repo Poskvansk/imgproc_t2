@@ -2,7 +2,6 @@ import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 
-
 def show(img):
 
     cv2.imshow("image", img)
@@ -10,9 +9,6 @@ def show(img):
     cv2.destroyAllWindows()
 
 def binarization(img):
-
-    # binary_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    # binary_img = cv2.equalizeHist(img)
 
     ret,binary_img = cv2.threshold(img, 120, 255, cv2.THRESH_BINARY)
 
@@ -54,19 +50,17 @@ def watershed(img):
 
     unknown = cv2.subtract(sure_bg, sure_fg)
 
-    # # Marker labelling
     ret, markers = cv2.connectedComponents(sure_fg)
-
-    # # Add one to all labels so that sure background is not 0, but 1
     markers = markers + 1
 
-    # # Now, mark the region of unknown with zero
     markers[unknown==255] = 0
 
     img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
 
     markers = cv2.watershed(img, markers)
     img[markers == -1] = [255,0,0]  
+
+    img = cv2.bitwise_not(img)
 
     return img
 
@@ -78,12 +72,7 @@ def main():
 
     filled = fill_holes(binary_img)
 
-    test = watershed(filled)
-    show(test)
-    # test[] = (0,0,255)
-    show(test)
-
-    test2 = cv2.bitwise_not(test)
-    show(test2)
+    segment = watershed(filled)
+    show(segment)
 
 main()
